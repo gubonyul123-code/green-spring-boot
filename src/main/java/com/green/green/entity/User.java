@@ -46,6 +46,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @Column(name = "unblock_datetime", nullable = false)
+    @Column(name = "unblock_datetime", nullable = true)
     private LocalDateTime unblockDatetime;
 }

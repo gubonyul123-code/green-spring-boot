@@ -4,9 +4,11 @@ import com.green.green.dto.UserProfileResponse;
 import com.green.green.dto.UserResponse;
 import com.green.green.dto.UserUpdateRequest;
 import com.green.green.entity.User;
+import com.green.green.enums.UserStatus;
 import com.green.green.exceptions.AuthenticationFailureException;
 import com.green.green.exceptions.ResourceNotFoundException;
 import com.green.green.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -81,10 +83,12 @@ public class UserService {
         }
     }
 
+    // 삭제(유저 자진 회원 탈퇴)
     public void deleteUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
 
+        user.setStatus(UserStatus.QUITED);
         user.setDeleted(true);
         userRepository.save(user);
     }
