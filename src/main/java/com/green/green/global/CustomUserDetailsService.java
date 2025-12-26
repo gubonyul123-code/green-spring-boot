@@ -22,10 +22,11 @@ public class CustomUserDetailsService implements UserDetailsService { // Spring 
         throw  new UsernameNotFoundException(username);
     }
 
-        return org.springframework.security.core.userdetails.User  // Spring Security가 제공하는 User 클래스
+    return org.springframework.security.core.userdetails.User  // Spring Security가 제공하는 User 클래스
                 .builder()  // 빌더 패턴 시작 : 하나씩 설정해서 객체를 만듬
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .authorities(user.getRole().toString())
                 .build();
     }
 }

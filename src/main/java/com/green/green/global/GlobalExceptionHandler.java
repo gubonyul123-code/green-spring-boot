@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,9 +28,12 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.fail(e.getMessage()));
     }
 
-    // AuthorizationFailureException / 인가 실패 /로그인실패
-    @ExceptionHandler(AuthorizationFailureException.class)
-    public ResponseEntity<ApiResponse<Void>> handleUnauthorized(AuthorizationFailureException e) {
+    // AuthorizationFailureException / 권한 실패
+    @ExceptionHandler({
+            AuthorizationFailureException.class, // 우리 커스텀 권한 거절 익셉션
+            AuthorizationDeniedException.class  // 스프링 시큐리티 권한 거절 익셉션
+    })
+    public ResponseEntity<ApiResponse<?>> handleUnauthorized(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ApiResponse.fail(e.getMessage()));
     }
@@ -56,6 +60,7 @@ public class GlobalExceptionHandler {
     // Exception(모든 익셉션의 부모 개념 / 그외 처리하지 않은 모든 예외들 처리 / 사전에 만들어둔것들 아니면 부모가 처리)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.fail(e.getMessage()));
     }

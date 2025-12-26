@@ -4,6 +4,8 @@ import com.green.green.dto.*;
 import com.green.green.entity.AccessTokenBlacklist;
 import com.green.green.entity.RefreshToken;
 import com.green.green.entity.User;
+import com.green.green.enums.UserRole;
+import com.green.green.enums.UserStatus;
 import com.green.green.exceptions.AuthenticationFailureException;
 import com.green.green.exceptions.ResourceNotFoundException;
 import com.green.green.global.TokenProvider;
@@ -69,6 +71,8 @@ public class AuthService {
         user.setPassword(encodedPassword);
         user.setName(userRegisterRequest.getName());
         user.setCreatedDatetime(LocalDateTime.now());
+        user.setRole(UserRole.USER);
+        user.setStatus(UserStatus.ACTIVE);
 
         userRepository.save(user);
     }

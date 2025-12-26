@@ -15,7 +15,7 @@ import com.green.green.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +27,8 @@ public class BoardService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
 
-    public List<PostResponse> getAllBoards(){
-        List<Board> results = boardRepository.findBoardsByIsDeletedFalse();    // False : 0(DB)
+    public List<PostResponse> getAllBoards(Pageable pageable){
+        List<Board> results = boardRepository.findBoardsByIsDeletedFalse(pageable);    // False : 0(DB)
 
         List<PostResponse> response = new ArrayList<>();    // 빈 응답 리스트 만들기
 
