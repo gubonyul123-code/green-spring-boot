@@ -1,0 +1,48 @@
+package com.green.green.controller;
+
+import com.green.green.dto.*;
+import com.green.green.service.AuthService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
+            @Valid @RequestBody UserLoginRequest userLoginRequest
+    ){
+            LoginResponse result = authService.login(userLoginRequest);
+            return ResponseEntity.ok(ApiResponse.ok(result));
+   }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<Void>> register(@Valid @RequestBody UserRegisterRequest userRegisterRequest){
+            authService.registrer(userRegisterRequest);
+            return ResponseEntity.ok().body(ApiResponse.ok());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
+        authService.logout(logoutRequest);
+        return ResponseEntity.ok().body(ApiResponse.ok());
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest) {
+        RefreshResponse response = authService.refresh(refreshRequest);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+}
