@@ -1,7 +1,6 @@
 package com.green.green.controller;
 
 import com.green.green.dto.ApiResponse;
-import com.green.green.repository.LikeRepository;
 import com.green.green.service.LikeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

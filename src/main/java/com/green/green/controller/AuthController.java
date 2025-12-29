@@ -2,9 +2,7 @@ package com.green.green.controller;
 
 import com.green.green.dto.*;
 import com.green.green.service.AuthService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

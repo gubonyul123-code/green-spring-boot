@@ -4,13 +4,12 @@ import com.green.green.dto.ApiResponse;
 import com.green.green.dto.PostCreateRequest;
 import com.green.green.dto.PostResponse;
 import com.green.green.dto.PostUpdateRequest;
-import com.green.green.entity.Board;
 import com.green.green.service.BoardService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.List;

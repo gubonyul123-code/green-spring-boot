@@ -4,6 +4,7 @@ import com.green.green.dto.*;
 import com.green.green.entity.AccessTokenBlacklist;
 import com.green.green.entity.RefreshToken;
 import com.green.green.entity.User;
+import com.green.green.entity.VerificationCode;
 import com.green.green.enums.UserRole;
 import com.green.green.enums.UserStatus;
 import com.green.green.exceptions.AuthenticationFailureException;
@@ -12,15 +13,18 @@ import com.green.green.global.TokenProvider;
 import com.green.green.repository.AccessTokenBlacklistRepository;
 import com.green.green.repository.RefreshTokenRepository;
 import com.green.green.repository.UserRepository;
+import com.green.green.repository.VerificationCodeRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -31,10 +35,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private RefreshTokenRepository refreshTokenRepository;
     private AccessTokenBlacklistRepository accessTokenBlacklistRepository;
+    private VerificationCodeRepository verificationCodeRepository;
     private final PasswordEncoder passwordEncoder;
     private TokenProvider tokenProvider;
     // 리프레시 토큰의 지속시간(초) - 24시간
     private static final long REFRESH_TOKEN_VAILDITY = 1000 * 60 * 60 * 24;
+    private final JavaMailSender mailSender;
+    private final EmailService emailService;
 
     public LoginResponse login(UserLoginRequest userLoginRequest) {
         // 엑세스토큰, 리프레시 토큰
@@ -46,6 +53,10 @@ public class AuthService {
         if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
             // 실패했으면 401
             throw new AuthenticationFailureException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if(user.getStatus() != UserStatus.ACTIVE) {
+            throw new AuthenticationFailureException("ACTIVE 상태의 유저만 로그인 가능합니다.");
         }
 
         //로그인성공
@@ -70,11 +81,27 @@ public class AuthService {
         user.setUsername(userRegisterRequest.getUsername());
         user.setPassword(encodedPassword);
         user.setName(userRegisterRequest.getName());
+        user.setEmail(userRegisterRequest.getEmail());
         user.setCreatedDatetime(LocalDateTime.now());
         user.setRole(UserRole.USER);
-        user.setStatus(UserStatus.ACTIVE);
+        user.setStatus(UserStatus.PENDING);
 
         userRepository.save(user);
+
+        // 인증번호 발송도 여기서 진행해야 됨 !!
+        String verificationCode = generateVerificationCode();
+        VerificationCode verification = VerificationCode.builder()
+                .user(user)
+                .code(verificationCode)
+                .expirationDatetime(LocalDateTime.now().plusMinutes(10))
+                .build();
+
+        verificationCodeRepository.save(verification);
+
+        emailService.sendVerificationCode(
+                userRegisterRequest.getEmail(),
+                verificationCode
+        );
     }
 
     @Transactional  // 트랜젝션 관리
@@ -132,6 +159,12 @@ public class AuthService {
         String accessToken = tokenProvider.generateAccessToken(username);
 
         return new RefreshResponse(accessToken);
+    }
+
+    private String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000);
+        return String.valueOf(code);
     }
 }
 
