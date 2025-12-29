@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // ByUsername - username 으로 찾는다
     // findByUsername -> where에 username 걸어서 SELECT 하고 싶구나!
     User findByUsername(String username);
+    Optional<User> findByEmail(String email);
 
     // unblock 유저 업데이트 메서드
     @Modifying

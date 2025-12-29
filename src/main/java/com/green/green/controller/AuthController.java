@@ -2,9 +2,7 @@ package com.green.green.controller;
 
 import com.green.green.dto.*;
 import com.green.green.service.AuthService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
+
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -44,5 +43,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest) {
         RefreshResponse response = authService.refresh(refreshRequest);
         return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/verify-register")
+    public ResponseEntity<ApiResponse<Void>> verifyRegister(
+            @Valid @RequestBody VerifyRegisterRequest verifyRegisterRequest
+    ) {
+        authService.verifyRegister(verifyRegisterRequest);
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 }
