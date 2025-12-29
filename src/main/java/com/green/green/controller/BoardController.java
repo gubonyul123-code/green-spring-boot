@@ -74,9 +74,9 @@ public class BoardController {
         return ResponseEntity.ok(ApiResponse.ok(boardService.getMyPosts()));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<PostResponse>>> searchPosts(@RequestParam String keyword) {
+    @GetMapping("/search")  // 메서드 선언부 반환타입과 return의 반환타입은 일치해야 한다.(안 하면 에러)
+    public ResponseEntity<ApiResponse<List<PostResponse>>> searchPosts(@RequestParam String keyword) {  // ApiResponse : API 응답을 감싸는 래퍼 클래스, ResponseEntity : HTTP 응답 전체를 담는 클래스, @RequestParam : URL의 쿼리 파라미터에서 값을 받아옴
         List<PostResponse> response = boardService.search(keyword);
-        return ResponseEntity.ok(ApiResponse.ok(response));
+        return ResponseEntity.ok(ApiResponse.ok(response)); // ResponseEntity 감싸는 목적 : HTTP 상태 코드를 직접 제어하기 위해(안 싸도 기능적으로는 가능함)
     }
 }

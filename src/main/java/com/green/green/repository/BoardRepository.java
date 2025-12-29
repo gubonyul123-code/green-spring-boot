@@ -14,6 +14,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {    // J
     List<Board> findBoardsByIsDeletedFalse(Pageable pageable);
     List<Board> findBoardsByAuthorId(int id);
 
-    @Query(value = "SELECT * FROM boards WHERE MATCH(title) AGAINST(:keyword)", nativeQuery = true)
+    // MATCH(title) : title 컬럼에서, AGAINST(:keyword -  이 부분이 메서드 매개변수와 연결됨) : keyword와 매칭되는 행 찾기
+    @Query(value = "SELECT * FROM boards WHERE MATCH(title) AGAINST(:keyword)", nativeQuery = true) // nativeQuery : 실제 테이블명 등을 직접 사용한다는 선언
     List<Board> searchByTitle(@Param("keyword") String keyword);
 }

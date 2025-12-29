@@ -189,7 +189,7 @@ public class BoardService {
     }
 
     public List<PostResponse> search(String keyword) {
-        // 검색 -> sQL을 실행
+        // 검색 -> SQL을 실행
         List<Board> results = boardRepository.searchByTitle(keyword);
 
         // 결과를 return
