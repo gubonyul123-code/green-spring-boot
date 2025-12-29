@@ -16,7 +16,7 @@ public class EmailService {
     @Async  // 비동기 메서드
     public void sendVerificationCode(String toEmail, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("gubonyul123@gmail.com");  // 발신자
+//        message.setFrom("gubonyul123@gmail.com");  // 발신자
         message.setTo(toEmail); // 수신자
         message.setSubject("그린보드 서비스에서 발송한 인증번호입니다.");  // 메일 제목
         message.setText("다음 인증번호를 서비스에 입력해주세요 : " + code);  // 메일 내용

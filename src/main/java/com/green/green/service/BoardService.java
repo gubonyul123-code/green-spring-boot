@@ -12,6 +12,7 @@ import com.green.green.exceptions.ResourceNotFoundException;
 import com.green.green.repository.BoardRepository;
 import com.green.green.repository.LikeRepository;
 import com.green.green.repository.UserRepository;
+import com.green.green.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -202,7 +203,7 @@ public class BoardService {
             PostResponse newResult = new PostResponse(
                     board.getId(),
                     board.getTitle(),
-                    board.getContent(),
+                    StringUtils.truncate(board.getContent(), 100),  // 컨텐트 100자에 끊기 유틸 사용
                     "",
                     likeCount
             );

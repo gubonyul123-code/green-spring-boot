@@ -1,6 +1,6 @@
 package com.green.green.dto;
 
-import com.green.green.global.DatetimeFunction;
+import com.green.green.utils.DatetimeFunction;
 import lombok.Getter;
 import lombok.Setter;
 

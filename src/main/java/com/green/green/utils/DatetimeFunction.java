@@ -1,4 +1,4 @@
-package com.green.green.global;
+package com.green.green.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
