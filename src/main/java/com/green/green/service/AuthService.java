@@ -161,6 +161,29 @@ public class AuthService {
         return new RefreshResponse(accessToken);
     }
 
+    public void verifyRegister(VerifyRegisterRequest verifyRegisterRequest) {
+        // email로 id 찾기
+        User user = userRepository.findByEmail(verifyRegisterRequest.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("유저를 찾을 수 없습니다"));
+
+        VerificationCode verificationCode = verificationCodeRepository.findByUserIdAndExpirationDatetimeAfterAndIsVerifiedFalse(user.getId(), LocalDateTime.now())
+                .orElseThrow(() -> new ResourceNotFoundException("인증 시도를 하지 않은 이메일입니다."));
+
+        if(!verifyRegisterRequest.getCode().equals(verificationCode.getCode())) {
+            throw new AuthenticationFailureException("인증번호가 다릅니다");
+        }
+
+        if(verificationCode.getExpirationDatetime().isBefore(LocalDateTime.now())){
+            throw new AuthenticationFailureException("인증 시간이 만료되었습니다.");
+        }
+
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+        verificationCode.setVerified(true);
+        verificationCodeRepository.save(verificationCode);
+        log.info("ACTIVE 처리 완료. 유저 이메일: {}", user.getEmail());
+    }
+
     private String generateVerificationCode() {
         Random random = new Random();
         int code = 100000 + random.nextInt(900000);

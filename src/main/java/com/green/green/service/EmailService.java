@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;    // 빌드그래들에 추가한 '메일' 코드 가져오기
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender mailSender;
 
+    @Async  // 비동기 메서드
     public void sendVerificationCode(String toEmail, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("gubonyul123@gmail.com");  // 발신자

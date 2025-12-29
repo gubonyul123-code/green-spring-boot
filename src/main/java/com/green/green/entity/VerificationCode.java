@@ -21,9 +21,12 @@ public class VerificationCode {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "code", nullable = false, length = 10)
     private String code;
 
     @Column(name = "expiration_datetime", nullable = false)
     private LocalDateTime expirationDatetime;
+
+    @Column(name = "is_verified", nullable = false)
+    private boolean isVerified;
 }

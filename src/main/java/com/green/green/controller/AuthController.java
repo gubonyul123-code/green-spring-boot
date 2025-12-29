@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
@@ -42,5 +43,13 @@ public class AuthController {
     public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest) {
         RefreshResponse response = authService.refresh(refreshRequest);
         return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/verify-register")
+    public ResponseEntity<ApiResponse<Void>> verifyRegister(
+            @Valid @RequestBody VerifyRegisterRequest verifyRegisterRequest
+    ) {
+        authService.verifyRegister(verifyRegisterRequest);
+        return ResponseEntity.ok(ApiResponse.ok());
     }
 }

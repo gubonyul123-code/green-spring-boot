@@ -7,7 +7,6 @@ import com.green.green.dto.UserUpdateRequest;
 import com.green.green.entity.User;
 import com.green.green.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
