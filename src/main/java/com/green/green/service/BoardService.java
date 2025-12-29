@@ -187,4 +187,29 @@ public class BoardService {
 
         return response;
     }
+
+    public List<PostResponse> search(String keyword) {
+        // 검색 -> sQL을 실행
+        List<Board> results = boardRepository.searchByTitle(keyword);
+
+        // 결과를 return
+        List<PostResponse> response = new ArrayList<>();
+
+        // board를 post response 로 변경하는 로직
+        for(Board board : results) {
+            long likeCount = likeRepository.countByBoard(board);
+
+            PostResponse newResult = new PostResponse(
+                    board.getId(),
+                    board.getTitle(),
+                    board.getContent(),
+                    "",
+                    likeCount
+            );
+
+            response.add(newResult);
+        }
+
+        return response;
+    }
 }
